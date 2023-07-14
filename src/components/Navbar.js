@@ -72,6 +72,9 @@ const Navbar = () => {
                   Technology
                 </Link>
               </li>
+              <li>
+                1234
+              </li>
             </ul>
           </div>
           <img
