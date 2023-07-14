@@ -78,6 +78,7 @@ const Navbar = () => {
               <li>
                 9876
               </li>
+              <li>123</li>
             </ul>
           </div>
           <img
