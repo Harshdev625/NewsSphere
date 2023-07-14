@@ -69,8 +69,14 @@ const Navbar = () => {
               </li>
               <li className="nav-item">
                 <Link className="nav-link" to="/Technology">
-                  Technologyy999123345
+                  Technology123876hung123
                 </Link>
+              </li>
+              <li>
+                1234
+              </li>
+              <li>
+                9876
               </li>
             </ul>
           </div>
