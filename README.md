@@ -24,6 +24,8 @@ To run the web application locally, you need to install Node.js on your device. 
 ![CSS](https://github.com/Harshdev625/NewsMonkey/assets/98793412/e0b0d16f-0954-486a-ba80-07cac0d29364)
 ![bootstrap](https://github.com/Harshdev625/NewsMonkey/assets/98793412/16312f73-7fd5-48c0-98ff-8fa79f19e3e9)
 
+# Contributing
+Contributions to the NewsMonkey are welcome! If you encounter any bugs, issues, or have ideas for improvements, please open an issue on the repository. Pull requests with enhancements are also appreciated.
 
 <!--Preview-->
 # Preview
