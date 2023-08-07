@@ -1,13 +1,89 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  padding: 0;
+  font-family: 'Courier New', Courier, monospace;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.nav-text {
+  margin: 5px;
+  font-size: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  padding: 10px;
+  color:#fff;
+}
+.nav-text a{ 
+  color:aqua;
+}
+.alert-message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+button {
+  cursor: pointer;
+  background-color: black !important;
+  color: white;
+}
+
+.heading {
+  font-size: 48px;
+  font-weight: bold;
+}
+
+.signin-button {
+  height: 40px;
+  width: 100px;
+  background: transparent;
+  margin: 20px 0px;
+}
+
+.form-title {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.input-area {
+  padding: 5px;
+  background-color: transparent;
+  color: white;
+  width: 225px;
+}
+
+.display {
+  background-image: url(https://img.freepik.com/free-photo/beautiful-view-greenery-bridge-forest-perfect-background_181624-17827.jpg?w=2000);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  height: 100vh;
+}
+
+.homepage {
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.315);
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  height: auto;
+  width: 90%;
+
+}
+
+@media (min-width: 768px) {
+  .homepage {
+    width: 50%;
+  }
 }
