@@ -6,17 +6,24 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.card {
+  height: 500px;
+  overflow: auto;
+}
+
 .nav-text {
   margin: 5px;
   font-size: 20px;
   cursor: pointer;
   font-weight: 600;
   padding: 10px;
-  color:#fff;
+  color: #fff;
 }
-.nav-text a{ 
-  color:aqua;
+
+.nav-text a {
+  color: aqua;
 }
+
 .alert-message {
   position: fixed;
   top: 50%;
@@ -25,6 +32,7 @@ body {
   background-color: #fff;
   padding: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  z-index: 9999;
 }
 
 button {
@@ -79,7 +87,6 @@ button {
   padding: 15px;
   height: auto;
   width: 90%;
-
 }
 
 @media (min-width: 768px) {

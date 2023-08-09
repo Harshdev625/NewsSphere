@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import axios from "axios";
 import Alert from "./Alert";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-const Signin = ({ loadUser, onRouteChange }) => {
+const Signin = ({ loadUser, setSignedin }) => {
+  const navigate = useNavigate();
   const [state, setState] = useState({
     signInEmail: "",
     signInPassword: "",
@@ -25,7 +27,6 @@ const Signin = ({ loadUser, onRouteChange }) => {
       alertMessage: "",
     }));
   };
-  
 
   const onPasswordChange = (event) => {
     setState((prevState) => ({
@@ -44,10 +45,10 @@ const Signin = ({ loadUser, onRouteChange }) => {
       }));
       return;
     }
-console.log(state)
+    console.log(state);
     try {
       axios
-        .post("http://localhost:3000/api/users/login", {
+        .post("http://localhost:8080/api/users/login", {
           email: signInEmail,
           password: signInPassword,
         })
@@ -55,8 +56,8 @@ console.log(state)
           const user = response.data;
           if (user._id) {
             loadUser(user);
-            console.log('hello')
-            onRouteChange("home");
+            setSignedin(true);
+            navigate("/");
           } else {
             setState((prevState) => ({
               ...prevState,
@@ -127,7 +128,7 @@ console.log(state)
             </button>
             <p className="nav-text">
               Don't have an account?
-              <Link to="/signup" onClick={()=>onRouteChange("signup")}>Register</Link>
+              <Link to="/signup">Register</Link>
             </p>
           </div>
           {state.showAlert && (

@@ -1,20 +1,25 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import Dark from '../Image/night-mode.png';
-import Light from '../Image/brightness.png';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import Dark from "../Image/night-mode.png";
+import Light from "../Image/brightness.png";
+import User from "../Image/user.png";
+// import { useNavigate } from "react-router-dom";
 
-const Navbar = () => {
-  const [mode, setMode] = useState('light');
-
+const Navbar = ({ setSignedin, initialState }) => {
+  const [mode, setMode] = useState("light");
+  // const navigate = useNavigate();
+  const handleSignout = () => {
+    setSignedin(false);
+  };
   const toggleMode = () => {
-    if (mode === 'dark') {
-      setMode('light');
-      document.body.style.backgroundColor = 'white';
-      document.body.style.color = 'black';
+    if (mode === "dark") {
+      setMode("light");
+      document.body.style.backgroundColor = "white";
+      document.body.style.color = "black";
     } else {
-      setMode('dark');
-      document.body.style.backgroundColor = '#333333';
-      document.body.style.color = 'white';
+      setMode("dark");
+      document.body.style.backgroundColor = "#333333";
+      document.body.style.color = "white";
     }
   };
 
@@ -22,12 +27,12 @@ const Navbar = () => {
     <div>
       <nav
         className={`navbar navbar-expand-lg ${
-          mode === 'light' ? 'navbar-dark bg-dark' : 'navbar-light bg-light'
+          mode === "light" ? "navbar-dark bg-dark" : "navbar-light bg-light"
         }`}
       >
         <div className="container-fluid">
           <Link className="navbar-brand" to="/">
-            NewsMonkey
+            NewsSphere
           </Link>
           <button
             className="navbar-toggler"
@@ -75,11 +80,48 @@ const Navbar = () => {
             </ul>
           </div>
           <img
-            src={mode === 'light' ? Dark : Light}
+            src={mode === "light" ? Dark : Light}
             alt="Mode"
             onClick={toggleMode}
-            style={{  width: '48px',  backgroundColor: 'white', padding:'5px' }}
+            style={{ width: "48px", backgroundColor: "white", padding: "5px" }}
           ></img>
+          <img
+            className="btn btn-secondary dropdown-toggle"
+            src={User}
+            style={{ width: "48px", padding: "5px" }}
+            alt="user"
+            id="dropdownMenuButton"
+            data-bs-toggle="dropdown"
+          ></img>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-end",
+              position: "absolute",
+              top: 60,
+              right: 160,
+            }}
+          >
+            <ul className="dropdown-menu">
+              <li>
+                <Link className="dropdown-item" to="/savedarticle">
+                  Saved Article
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className="dropdown-item"
+                  to="/signin"
+                  onClick={() => {
+                    handleSignout();
+                  }}
+                >
+                  Signout
+                </Link>
+              </li>
+            </ul>
+          </div>
         </div>
       </nav>
     </div>

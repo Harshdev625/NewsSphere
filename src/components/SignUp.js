@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import axios from "axios";
 import Alert from "./Alert";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-const SignUp = ({ loadUser, onRouteChange }) => {
+const SignUp = ({ loadUser,setSignedin }) => {
+  const navigate = useNavigate();
   const [state, setState] = useState({
     email: "",
     password: "",
@@ -44,7 +46,7 @@ const SignUp = ({ loadUser, onRouteChange }) => {
 
     try {
       axios
-        .post("http://localhost:3000/api/users/createuser", {
+        .post("http://localhost:8080/api/users/createuser", {
           email,
           password,
           name,
@@ -53,7 +55,8 @@ const SignUp = ({ loadUser, onRouteChange }) => {
           const user = response.data;
           if (user._id) {
             loadUser(user);
-            onRouteChange("home");
+            setSignedin(true)
+            navigate("/");
           }
         })
         .catch((error) => {
@@ -135,7 +138,7 @@ const SignUp = ({ loadUser, onRouteChange }) => {
           </button>
           <p className="nav-text">
             Already Registered?
-            <Link to="/signin"  onClick={()=>onRouteChange("signin")}>Login</Link>
+            <Link to="/signin" >Login</Link>
           </p>
         </div>
         {state.showAlert && (
