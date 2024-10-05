@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Alert from "./Alert";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Signin = ({ loadUser, setSignedin }) => {
   const navigate = useNavigate();
@@ -13,10 +12,11 @@ const Signin = ({ loadUser, setSignedin }) => {
     alertMessage: "",
   });
 
-  const onEmailChange = (event) => {
+  const onChangeHandler = (event) => {
+    const { name, value } = event.target;
     setState((prevState) => ({
       ...prevState,
-      signInEmail: event.target.value,
+      [name]: value,
     }));
   };
 
@@ -28,15 +28,9 @@ const Signin = ({ loadUser, setSignedin }) => {
     }));
   };
 
-  const onPasswordChange = (event) => {
-    setState((prevState) => ({
-      ...prevState,
-      signInPassword: event.target.value,
-    }));
-  };
-
-  const onSubmitSignIn = () => {
+  const onSubmitSignIn = async () => {
     const { signInEmail, signInPassword } = state;
+
     if (!signInEmail || !signInPassword) {
       setState((prevState) => ({
         ...prevState,
@@ -45,98 +39,82 @@ const Signin = ({ loadUser, setSignedin }) => {
       }));
       return;
     }
-    console.log(state);
+
     try {
-      axios
-        .post("http://localhost:8080/api/users/login", {
+      const response = await axios.post(
+        "http://localhost:8080/api/users/login",
+        {
           email: signInEmail,
           password: signInPassword,
-        })
-        .then((response) => {
-          const user = response.data;
-          if (user._id) {
-            loadUser(user);
-            setSignedin(true);
-            navigate("/");
-          } else {
-            setState((prevState) => ({
-              ...prevState,
-              showAlert: true,
-              alertMessage: "Invalid Credentials.",
-            }));
-          }
-        })
-        .catch((error) => {
-          console.log("Error:", error);
-        });
+        }
+      );
+
+      const { token, user } = response.data;
+      if (token && user) {
+        localStorage.setItem("token", token);
+        loadUser(user);
+        navigate("/homepage");
+      } else {
+        setState((prevState) => ({
+          ...prevState,
+          showAlert: true,
+          alertMessage: "Invalid credentials.",
+        }));
+      }
     } catch (error) {
-      console.log("Error:", error);
+      console.error("Error:", error);
+      setState((prevState) => ({
+        ...prevState,
+        showAlert: true,
+        alertMessage: "Login failed. Please try again.",
+      }));
     }
   };
 
   return (
-    <>
-      <div className="display">
-        <div className="homepage">
-          <p className="heading">Sign In</p>
-          <div>
-            <label className="form-title" htmlFor="email-address">
-              Email
-            </label>
-            <br />
-            <input
-              className="input-area"
-              type="email"
-              name="email-address"
-              id="email-address"
-              onChange={onEmailChange}
-              onFocus={(event) => {
-                event.target.style.background = "black";
-              }}
-              onBlur={(event) => {
-                event.target.style.background = "";
-              }}
-            />
-          </div>
-          <div>
-            <label className="form-title" htmlFor="password">
-              Password
-            </label>
-            <br />
-            <input
-              className="input-area"
-              type="password"
-              name="password"
-              id="password"
-              onChange={onPasswordChange}
-              onFocus={(event) => {
-                event.target.style.background = "black";
-              }}
-              onBlur={(event) => {
-                event.target.style.background = "";
-              }}
-            />
-          </div>
-          <div>
-            <button
-              onClick={onSubmitSignIn}
-              type="submit"
-              value="Sign in"
-              className="signin-button"
-            >
-              Sign In
-            </button>
-            <p className="nav-text">
-              Don't have an account?
-              <Link to="/signup">Register</Link>
-            </p>
-          </div>
-          {state.showAlert && (
-            <Alert message={state.alertMessage} onClose={handleCloseAlert} />
-          )}
+    <div className="display">
+      <div className="homepage">
+        <p className="heading">Login</p>
+        <div className="container">
+          <label className="form-title" htmlFor="signInEmail">
+            Email
+          </label>
+          <br />
+          <input
+            className="input-area"
+            type="email"
+            name="signInEmail"
+            id="signInEmail"
+            onChange={onChangeHandler}
+          />
         </div>
+        <div className="container">
+          <label className="form-title" htmlFor="signInPassword">
+            Password
+          </label>
+          <br />
+          <input
+            className="input-area"
+            type="password"
+            name="signInPassword"
+            id="signInPassword"
+            onChange={onChangeHandler}
+          />
+        </div>
+        <div>
+          <button onClick={onSubmitSignIn} className="signin-button">
+            Login
+          </button>
+          <p className="nav-text">
+            Not Registered?
+            <Link to="/signup"> Register</Link>
+          </p>
+        </div>
+        {state.showAlert && (
+          <Alert message={state.alertMessage} onClose={handleCloseAlert} />
+        )}
       </div>
-    </>
+    </div>
   );
 };
 

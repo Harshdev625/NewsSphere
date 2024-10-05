@@ -1,29 +1,25 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Alert from "./Alert";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-const SignUp = ({ loadUser,setSignedin }) => {
+const SignUp = ({ loadUser }) => {
   const navigate = useNavigate();
   const [state, setState] = useState({
+    name: "",
     email: "",
     password: "",
-    name: "",
+    confirmPassword: "",
     showAlert: false,
     alertMessage: "",
   });
 
-  const onNameChange = (event) => {
-    setState((prevState) => ({ ...prevState, name: event.target.value }));
-  };
-
-  const onEmailChange = (event) => {
-    setState((prevState) => ({ ...prevState, email: event.target.value }));
-  };
-
-  const onPasswordChange = (event) => {
-    setState((prevState) => ({ ...prevState, password: event.target.value }));
+  const onChangeHandler = (event) => {
+    const { name, value } = event.target;
+    setState((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
   const handleCloseAlert = () => {
@@ -33,43 +29,64 @@ const SignUp = ({ loadUser,setSignedin }) => {
       alertMessage: "",
     }));
   };
-  const onSubmitRegister = () => {
-    const { email, password, name } = state;
-    if (!email || !password || !name) {
+
+  const onSubmitSignUp = async () => {
+    const { name, email, password, confirmPassword } = state;
+
+    if (!name || !email || !password || !confirmPassword) {
       setState((prevState) => ({
         ...prevState,
         showAlert: true,
-        alertMessage: "Please fill in all the fields.",
+        alertMessage: "All fields are required.",
+      }));
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setState((prevState) => ({
+        ...prevState,
+        showAlert: true,
+        alertMessage: "Passwords do not match.",
       }));
       return;
     }
 
     try {
-      axios
-        .post("http://localhost:8080/api/users/createuser", {
+      const response = await axios.post(
+        "http://localhost:8080/api/users/createuser",
+        {
+          name,
           email,
           password,
-          name,
-        })
-        .then((response) => {
-          const user = response.data;
-          if (user._id) {
-            loadUser(user);
-            setSignedin(true)
-            navigate("/");
-          }
-        })
-        .catch((error) => {
-          console.log("Error:", error);
-        });
+        }
+      );
+
+      const { token, user } = response.data;
+      if (token && user) {
+        localStorage.setItem("token", token);
+        loadUser(user);
+        navigate("/homepage");
+      } else {
+        setState((prevState) => ({
+          ...prevState,
+          showAlert: true,
+          alertMessage: "Signup failed. Please try again.",
+        }));
+      }
     } catch (error) {
-      console.log("Error:", error);
+      console.error("Error:", error);
+      setState((prevState) => ({
+        ...prevState,
+        showAlert: true,
+        alertMessage: "Signup failed. Please try again.",
+      }));
     }
   };
+
   return (
     <div className="display">
       <div className="homepage">
-        <p className="heading">Register</p>
+        <p className="heading">Sign Up</p>
         <div className="container">
           <label className="form-title" htmlFor="name">
             Name
@@ -80,32 +97,20 @@ const SignUp = ({ loadUser,setSignedin }) => {
             type="text"
             name="name"
             id="name"
-            onChange={onNameChange}
-            onFocus={(event) => {
-              event.target.style.background = "black";
-            }}
-            onBlur={(event) => {
-              event.target.style.background = "";
-            }}
+            onChange={onChangeHandler}
           />
         </div>
-        <div className="container ">
-          <label className="form-title" htmlFor="email-address">
+        <div className="container">
+          <label className="form-title" htmlFor="email">
             Email
           </label>
           <br />
           <input
             className="input-area"
             type="email"
-            name="email-address"
-            id="email-address"
-            onChange={onEmailChange}
-            onFocus={(event) => {
-              event.target.style.background = "black";
-            }}
-            onBlur={(event) => {
-              event.target.style.background = "";
-            }}
+            name="email"
+            id="email"
+            onChange={onChangeHandler}
           />
         </div>
         <div className="container">
@@ -118,27 +123,29 @@ const SignUp = ({ loadUser,setSignedin }) => {
             type="password"
             name="password"
             id="password"
-            onChange={onPasswordChange}
-            onFocus={(event) => {
-              event.target.style.background = "black";
-            }}
-            onBlur={(event) => {
-              event.target.style.background = "";
-            }}
+            onChange={onChangeHandler}
+          />
+        </div>
+        <div className="container">
+          <label className="form-title" htmlFor="confirmPassword">
+            Confirm Password
+          </label>
+          <br />
+          <input
+            className="input-area"
+            type="password"
+            name="confirmPassword"
+            id="confirmPassword"
+            onChange={onChangeHandler}
           />
         </div>
         <div>
-          <button
-            onClick={onSubmitRegister}
-            type="submit"
-            value="Sign in"
-            className="signin-button"
-          >
+          <button onClick={onSubmitSignUp} className="signup-button">
             Register
           </button>
           <p className="nav-text">
-            Already Registered?
-            <Link to="/signin" >Login</Link>
+            Already have an account?
+            <Link to="/signin"> Login</Link>
           </p>
         </div>
         {state.showAlert && (
